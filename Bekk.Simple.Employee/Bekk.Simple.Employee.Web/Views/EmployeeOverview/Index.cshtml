@@ -1,0 +1,52 @@
+﻿@model Bekk.Simple.Employee.Models.EmployeeOverviewViewModel
+
+<div class="content">
+    <h2>BEKK Ansatte</h2>
+
+    <div class="all-employees">
+        @foreach (var department in Model.DepartmentsAndEmployees)
+        {
+            <div class="department">@department.Key</div>
+
+            foreach (var employee in department.Value)
+            {
+                <div>@employee.Name (@employee.Email)</div>
+            }
+        }
+    </div>
+    
+    <div class="add-new-employee">
+        <h4>Legg til ny ansatt</h4>
+        @using (Html.BeginForm("Add", "EmployeeOverview", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div>
+                @Html.Label("Navn: ")
+                @Html.TextBox("Name")
+            </div>
+            <div>
+                @Html.Label("Epost: ")
+                @Html.TextBox("Email")
+            </div>
+            <div>
+                @Html.Label("Avdeling: ")
+                @Html.DropDownList("Department", Model.GetDepartmentSelectionList())
+            </div>
+            <input type="submit" value="Legg til..."/>
+        }
+    </div>
+    
+    <div class="delete-employee">
+        <h4>Slett ansatt</h4>
+        @using (Html.BeginForm("Delete", "EmployeeOverview", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            
+            <div>
+                @Html.DropDownList("Name", Model.GetEmployeeSelectionList())
+            </div>
+            <input type="submit" value="Slett valgte..."/>
+        }
+    </div>
+</div>
