@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -21,7 +22,7 @@ namespace Bekk.Simple.Employee.Models
             {
                 employees.AddRange(
                     departmentsAndEmployee.Value.Select(
-                        employee => new SelectListItem {Text = employee.Name, Value = employee.Name}));
+                        employee => new SelectListItem {Text = employee.Name, Value = employee.Id.ToString(CultureInfo.InvariantCulture)}));
             }
 
             return employees;

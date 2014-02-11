@@ -2,5 +2,6 @@
 {
     public class DeleteEmployeeViewModel
     {
+        public int Id { get; set; }
     }
 }
