@@ -31,8 +31,8 @@ namespace Bekk.Simple.Employee.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Add(NewEmployeeViewModel newEmployee)
         {
-            Employees.Add(newEmployee.ToEmployee(Departments));
-            return View("Index", CreateViewModel());
+            Employees.Add(newEmployee.ToEmployee());
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -40,16 +40,21 @@ namespace Bekk.Simple.Employee.Controllers
         public ActionResult Delete(NewEmployeeViewModel deleteEmployee)
         {
             Employees.RemoveAll(employee => employee.Name.Equals(deleteEmployee.Name));
-
-            return View("Index", CreateViewModel());
+            return RedirectToAction("Index");
         }
 
         private static EmployeeOverviewViewModel CreateViewModel()
         {
-            IDictionary<string, List<Models.Employee>> departmentsAndEmployees =
-                Employees.GroupBy(employee => employee.Department.Name)
-                    .ToDictionary(grouping => grouping.Key, grouping => grouping.ToList());
+            IDictionary<string, List<Models.Employee>> departmentsAndEmployees = new Dictionary<string, List<Models.Employee>>();
 
+            foreach (var department in Departments)
+            {
+                var employeesInDepartment = Employees.Where(employee => employee.Department.Name == department.Name).ToList();
+
+                if(employeesInDepartment.Any())
+                    departmentsAndEmployees.Add(department.Name, employeesInDepartment);    
+            }
+                
             var viewModel = new EmployeeOverviewViewModel { DepartmentsAndEmployees = departmentsAndEmployees, Departments = Departments };
             return viewModel;
         }

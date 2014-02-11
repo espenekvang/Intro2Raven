@@ -1,18 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Bekk.Simple.Employee.Models;
+﻿using Bekk.Simple.Employee.Models;
 
 namespace Bekk.Simple.Employee.Extensions
 {
     public static class NewEmployeeViewModelExtension
     {
-        public static Models.Employee ToEmployee(this NewEmployeeViewModel viewModel, List<Department> departments)
+        public static Models.Employee ToEmployee(this NewEmployeeViewModel viewModel)
         {
             return new Models.Employee
             {
                 Name = viewModel.Name,
                 Email = viewModel.Email,
-                Department = departments.FirstOrDefault(department => department.Name.Equals(viewModel.Department))
+                Department = new Department{Name = viewModel.Department}
             };
         }
     }
