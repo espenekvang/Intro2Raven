@@ -44,7 +44,7 @@
             @Html.AntiForgeryToken()
             
             <div>
-                @Html.DropDownList("Name", Model.GetEmployeeSelectionList())
+                @Html.DropDownList("Id", Model.GetEmployeeSelectionList())
             </div>
             <input type="submit" value="Slett valgte..."/>
         }

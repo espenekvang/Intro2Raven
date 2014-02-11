@@ -6,14 +6,8 @@ using Bekk.Simple.Employee.Models;
 
 namespace Bekk.Simple.Employee.Controllers
 {
-    public class EmployeeOverviewController : Controller
+    public class EmployeeOverviewController : RavenController
     {
-        private static readonly List<Models.Employee> Employees = new List<Models.Employee>
-        {
-            new Models.Employee {Name = "Donald Duck", Email = "donald@duck.com", Department = new Department{Name = "Tech"}},
-            new Models.Employee {Name = "Dolly Duck", Email = "dolly@duck.com", Department = new Department{Name ="BMC"}}
-        };
-        
         private static readonly List<Department> Departments = new List<Department>
         {
             new Department{Name = "Tech"},
@@ -31,26 +25,27 @@ namespace Bekk.Simple.Employee.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Add(NewEmployeeViewModel newEmployee)
         {
-            Employees.Add(newEmployee.ToEmployee());
+            RavenSession.Store(newEmployee.ToEmployee());
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(NewEmployeeViewModel deleteEmployee)
+        public ActionResult Delete(DeleteEmployeeViewModel deleteEmployee)
         {
-            Employees.RemoveAll(employee => employee.Name.Equals(deleteEmployee.Name));
+            RavenSession.Advanced.DocumentStore.DatabaseCommands.Delete(string.Format("employees/{0}", deleteEmployee.Id), null);
             return RedirectToAction("Index");
         }
 
-        private static EmployeeOverviewViewModel CreateViewModel()
+        private EmployeeOverviewViewModel CreateViewModel()
         {
+
+            var allEmployees = RavenSession.Query<Models.Employee>().ToList();
             IDictionary<string, List<Models.Employee>> departmentsAndEmployees = new Dictionary<string, List<Models.Employee>>();
 
             foreach (var department in Departments)
             {
-                var employeesInDepartment = Employees.Where(employee => employee.Department.Name == department.Name).ToList();
-
+                var employeesInDepartment = allEmployees.Where(employee => employee.Department.Name == department.Name).ToList();
                 if(employeesInDepartment.Any())
                     departmentsAndEmployees.Add(department.Name, employeesInDepartment);    
             }
