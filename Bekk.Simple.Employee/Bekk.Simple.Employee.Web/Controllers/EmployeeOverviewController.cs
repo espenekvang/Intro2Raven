@@ -39,15 +39,16 @@ namespace Bekk.Simple.Employee.Controllers
 
         private EmployeeOverviewViewModel CreateViewModel()
         {
-
-            var allEmployees = RavenSession.Query<Models.Employee>().ToList();
             IDictionary<string, List<Models.Employee>> departmentsAndEmployees = new Dictionary<string, List<Models.Employee>>();
 
             foreach (var department in Departments)
             {
-                var employeesInDepartment = allEmployees.Where(employee => employee.Department.Name == department.Name).ToList();
+                var departmentName = department.Name;
+                var employeesInDepartment =
+                    RavenSession.Query<Models.Employee>().Where(employee => employee.Department.Name == departmentName).ToList();
+                
                 if(employeesInDepartment.Any())
-                    departmentsAndEmployees.Add(department.Name, employeesInDepartment);    
+                    departmentsAndEmployees.Add(departmentName, employeesInDepartment);    
             }
                 
             var viewModel = new EmployeeOverviewViewModel { DepartmentsAndEmployees = departmentsAndEmployees, Departments = Departments };

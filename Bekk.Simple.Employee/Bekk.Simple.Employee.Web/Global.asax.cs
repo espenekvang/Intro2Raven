@@ -1,12 +1,10 @@
-﻿using System.Reflection;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Bekk.Simple.Employee.App_Start;
 using Raven.Client;
 using Raven.Client.Document;
-using Raven.Client.Indexes;
 
 namespace Bekk.Simple.Employee
 {
@@ -32,8 +30,6 @@ namespace Bekk.Simple.Employee
         {
             DocumentStore = new DocumentStore{ConnectionStringName = "RavenDB"};
             DocumentStore.Initialize();
-
-            IndexCreation.CreateIndexes(Assembly.GetCallingAssembly(), DocumentStore);
         }
     }
 }
