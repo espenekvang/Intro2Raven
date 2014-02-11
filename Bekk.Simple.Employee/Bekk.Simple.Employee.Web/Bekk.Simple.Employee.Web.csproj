@@ -149,6 +149,7 @@
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\EmployeeOverviewViewModel.cs" />
+    <Compile Include="Models\EmployeesByDepartment.cs" />
     <Compile Include="Models\NewEmployeeViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
